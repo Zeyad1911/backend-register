@@ -14,8 +14,11 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @PostMapping
-    public void createUser(User user){
+    @PostMapping("/register")
+    public void createUser(@RequestBody User user){
+        if(user.getPassword() == null){
+            return;
+        }
         userService.saveUser(user);
     }
 
