@@ -8,15 +8,14 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 @RestController
-@RequestMapping ("/token")
+@RequestMapping("/token")
 public class ConfirmationTokenController {
 
     @Autowired
     ConfirmationTokenService confirmationTokenService;
 
     @GetMapping("/confirm")
-    public ModelAndView ConfirmToken(@RequestParam("token") String token){
+    public void ConfirmToken(@RequestParam("token") String token){
             confirmationTokenService.confirmToken(token);
-            return new ModelAndView("redirect:/confirmation-page.html");
     }
 }

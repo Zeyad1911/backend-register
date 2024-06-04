@@ -3,7 +3,7 @@ package com.example.backendregister.services;
 import com.example.backendregister.Repository.ConfirmationTokenRepository;
 import com.example.backendregister.SecurityConfig.ConfirmationToken;
 import com.example.backendregister.model.User;
-import com.example.backendregister.model.UserRepository;
+import com.example.backendregister.Repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -47,6 +47,7 @@ public class ConfirmationTokenService {
 
         User user = confirmationToken.getUser();
         user.setEnabled(true);
+
         userRepository.save(user);
 
         return "Token confirmed and user enabled";

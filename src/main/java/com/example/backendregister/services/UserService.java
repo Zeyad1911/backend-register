@@ -2,24 +2,17 @@ package com.example.backendregister.services;
 
 import com.example.backendregister.SecurityConfig.ConfirmationToken;
 import com.example.backendregister.model.User;
-import com.example.backendregister.model.UserRepository;
-import jakarta.transaction.Transactional;
+import com.example.backendregister.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 
 @Service
@@ -84,11 +77,15 @@ public class UserService implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User userDetails = userRepository.findByUsername(username);
-        if(userDetails == null) {
+    public UserDetails loadUserByUsername  (String username) throws UsernameNotFoundException {
+        User userDetails = userRepository.findByEmail(username);
+        if(userDetails == null || !userDetails.isEnabled()) {
             throw  new UsernameNotFoundException("User not found");
         }
-        return userDetails;
+         return new org.springframework.security.core.userdetails.User(
+                userDetails.getUsername(),
+                userDetails.getPassword(),
+                 Collections.singletonList(
+                         new SimpleGrantedAuthority("ROLE_" + userDetails.getRole().name())));
     }
 }
